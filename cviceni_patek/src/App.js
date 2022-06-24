@@ -52,6 +52,21 @@ function App() {
       console.log(horskaCena);
     }
 
+    if(objednavka.detske) {
+      detskaCena = (objednavka.detskeKs * 200);
+      console.log(detskaCena);
+    }
+
+    if(objednavka.silnicni) {
+      silnicniCena = (objednavka.silnicniKs * 1500);
+      console.log(silnicniCena);
+    }
+
+    if(objednavka.gravel) {
+      gravelCena = (objednavka.gravelKs * 2500);
+      console.log(gravelCena);
+    }
+
     // let destinationPrice = objednavka.destinace;
     // setDestinationPrice(destinationPrice);
     // let pocetLetenek = objednavka.pocetLetenek;
@@ -76,7 +91,7 @@ function App() {
               });
             }} />Horské kolo (500 Kč / den), 
             <strong>ks:</strong>
-            <input type="text" id="horskeKs" value={objednavka.horskeKs} onChange={(e) => {
+            <input type="number" id="horskeKs" value={objednavka.horskeKs} onChange={(e) => {
             dispatch({
               type: "update_number",
               value: e.target.value,
@@ -84,9 +99,39 @@ function App() {
             });
           }} />
             <br />
-      <input type="checkbox" />Dětské kolo (200 Kč / den), <strong>ks:</strong><input type="text" id="pocetHorske" placeholder="Zadejte počet kusů" /><br />
-      <input type="checkbox" />Silniční kolo (1 500 Kč / den), <strong>ks:</strong><input type="text" placeholder="Zadejte počet kusů" /><br />
-      <input type="checkbox" />Gravel (2 500 Kč / den), <strong>ks:</strong><input type="text" placeholder="Zadejte počet kusů" /><br />
+      <input type="checkbox" id="detske" onChange={() => {
+              dispatch({
+                type: "toggle_detske",
+              });
+            }} />Dětské kolo (200 Kč / den), <strong>ks:</strong><input type="number" id="detskeKs" value={objednavka.detskeKs} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "detskeKs",
+              });
+            }} /><br />
+      <input type="checkbox" id="silnicni" onChange={() => {
+              dispatch({
+                type: "toggle_silnicni",
+              });
+            }} />Silniční kolo (1 500 Kč / den), <strong>ks:</strong><input type="number" id="silnicniKs" value={objednavka.silnicniKs} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "silnicniKs",
+              });
+            }}/><br />
+      <input type="checkbox" id="gravel" onChange={() => {
+              dispatch({
+                type: "toggle_gravel",
+              });
+            }} />Gravel (2 500 Kč / den), <strong>ks:</strong><input type="number" id="silnicniKs" value={objednavka.gravelKs} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "gravelKs",
+              });
+            }}/><br />
      </Prvek>
 
     {/* POČET DNŮ */}
