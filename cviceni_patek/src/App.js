@@ -4,13 +4,13 @@ import { Nadpis, PageContainer, Prvek } from './AppStyles';
 
 const defaultObjednavka = {
   horske: false,
-  horskeKs: 0,
+  horskeKs: 1,
   detske: false,
-  detskeKs: 0,
+  detskeKs: 1,
   silnicni: false,
-  silnicniKs: 0,
+  silnicniKs: 1,
   gravel: false,
-  gravelKs: 0,
+  gravelKs: 1,
   pocetDnu: 0,
   cyklonosic: 0,
   trida:0,
@@ -31,6 +31,7 @@ function setObjednavka(objednavka, action) {
   }
 };
 function App() {
+  const [finalPrice, setFinalPrice] = useState(0);
   const [showFinalPrice, setShowFinalPrice] = useState(0); //kvůli posunu
   const [objednavka, dispatch] = useReducer(setObjednavka, defaultObjednavka);
 
@@ -41,39 +42,37 @@ function App() {
   }, [objednavka, showFinalPrice]);
 
   const objednavkaPrice = (objednavka) => {
-    let finalniCena;
-    let horskaCena;
-    let detskaCena;
-    let silnicniCena;
-    let gravelCena;
+    let ThisBasePrice = 0;
+    let finalniCena = ThisBasePrice;
+    // let horskaCena;
+    // let detskaCena;
+    // let silnicniCena;
+    // let gravelCena;
 
     if(objednavka.horske) {
-      horskaCena = (objednavka.horskeKs * 500);
-      console.log(horskaCena);
+      finalniCena += objednavka.horskeKs * 500;
     }
 
     if(objednavka.detske) {
-      detskaCena = (objednavka.detskeKs * 200);
-      console.log(detskaCena);
+      finalniCena += objednavka.detskeKs * 200;
     }
 
     if(objednavka.silnicni) {
-      silnicniCena = (objednavka.silnicniKs * 1500);
-      console.log(silnicniCena);
+      finalniCena += objednavka.silnicniKs * 1500;
     }
 
     if(objednavka.gravel) {
-      gravelCena = (objednavka.gravelKs * 2500);
-      console.log(gravelCena);
+      finalniCena += objednavka.gravelKs * 2500;
     }
 
+    setFinalPrice(finalniCena);
+    console.log(finalniCena);
     // let destinationPrice = objednavka.destinace;
     // setDestinationPrice(destinationPrice);
     // let pocetLetenek = objednavka.pocetLetenek;
     // setPocetLetenek(pocetLetenek);
 
 
-  
     return finalniCena;
 
   }
