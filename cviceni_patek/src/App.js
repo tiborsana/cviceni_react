@@ -1,6 +1,6 @@
 import { useReducer, useState, useEffect } from 'react';
 import './App.css';
-import { Nadpis, PageContainer, Prvek } from './AppStyles';
+import { Nadpis, PageContainer, Prvek, KontrolaButton } from './AppStyles';
 
 const defaultObjednavka = {
   horske: false,
@@ -32,6 +32,7 @@ function setObjednavka(objednavka, action) {
 };
 function App() {
   const [finalPrice, setFinalPrice] = useState(0);
+  const [checked, setChecked] = useState(0);
   const [showFinalPrice, setShowFinalPrice] = useState(0); //kvůli posunu
   const [objednavka, dispatch] = useReducer(setObjednavka, defaultObjednavka);
 
@@ -44,10 +45,6 @@ function App() {
   const objednavkaPrice = (objednavka) => {
     let ThisBasePrice = 0;
     let finalniCena = ThisBasePrice;
-    // let horskaCena;
-    // let detskaCena;
-    // let silnicniCena;
-    // let gravelCena;
 
     if(objednavka.horske) {
       finalniCena += objednavka.horskeKs * 500;
@@ -65,29 +62,44 @@ function App() {
       finalniCena += objednavka.gravelKs * 2500;
     }
 
-
-
-
     // POČET DNŮ
     let pocetDnu = objednavka.pocetDnu;
-    finalniCena = (finalniCena*pocetDnu);
-    console.log(finalniCena);
-    setFinalPrice(finalniCena);
-    // let destinationPrice = objednavka.destinace;
-    // setDestinationPrice(destinationPrice);
-    // let pocetLetenek = objednavka.pocetLetenek;
-    // setPocetLetenek(pocetLetenek);
+    let newBasePrice
+    newBasePrice = (finalniCena*pocetDnu);
 
+    //PRISLUSENSTVI
+    if(objednavka.cyklonosic === 1.05) {
+      newBasePrice += (newBasePrice*0.05)
+    }
+    else if(objednavka.cyklonosic === 1.1) {
+      newBasePrice += (newBasePrice*0.1)
+    }
+    console.log(newBasePrice);
+    setFinalPrice(newBasePrice);
 
-    return finalniCena;
+  if(newBasePrice>0) {
+    return newBasePrice;
+  }
+  else {
+    return 0;
+  }
 
   }
+
+  const checkPrice = (objednavka) => {
+    if (objednavka.rozpocet >= finalPrice) {
+      let checkOK = 1;
+      setChecked(checkOK);
+    } else {
+      let checkNOK = 2;
+      setChecked(checkNOK);
+    }
+  };
 
   return (
     <PageContainer>
       <h1>Půjčovna kol</h1>
-      
-      {/* ještě dodělat */}
+    
       <Prvek>
       <Nadpis><br />Vyberte druh kola a počet kol k zapůjčení:</Nadpis>
       <input type="checkbox" id="horske" onChange={() => {
@@ -160,19 +172,48 @@ function App() {
 {/* CYKLONOSIČ */}
      <Prvek>
       <Nadpis>Cyklonosič:</Nadpis>
-      <input type="radio" name="cyklonosic" />Cyklonosič střešní (+5% z celkové ceny zápůjčky navíc)<br/>
-      <input type="radio" name="cyklonosic" />Cyklonosič na tažné zařízení (+10% z celkové ceny zápůjčky navíc)<br/>
-      <input type="radio" name="cyklonosic" />Není třeba cyklonosič<br/>
+      <input type="radio" name="cyklonosic" value={1.05} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "cyklonosic",
+              });
+            }} />Cyklonosič střešní (+5% z celkové ceny zápůjčky navíc)<br/>
+      <input type="radio" name="cyklonosic" value={1.1} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "cyklonosic",
+              });
+            }} />Cyklonosič na tažné zařízení (+10% z celkové ceny zápůjčky navíc)<br/>
+      <input type="radio" name="cyklonosic" value={1.0} onChange={(e) => {
+              dispatch({
+                type: "update_number",
+                value: e.target.value,
+                key: "cyklonosic",
+              });
+            }} />Není třeba cyklonosič<br/>
      </Prvek>
 
-    <Prvek>
+    <Prvek><br/>
       <Nadpis>Konečná kalkulace:</Nadpis><br/>
       <label>Zadejte Váš rozpočet:</label>
-      <input type="text" /><br/>
+      <input type="text" id="rozpocet" value={objednavka.rozpocet} onChange={(e) => {
+            dispatch({
+              type: "update_number",
+              value: e.target.value,
+              key: "rozpocet",
+            });
+          }} /><br/>
       <label>Finální cena:</label>
-    <input type="text" value={showFinalPrice}/><br/>
-      <label>Výsledek:</label>
-      <input type="text" />
+      <input type="text" value={showFinalPrice}/>
+      <br/>
+      <KontrolaButton checked={checked} onClick={() => {
+            checkPrice(objednavka);
+            console.log(checked);
+          }}>
+            Kontrola
+          </KontrolaButton>
     </Prvek>
 
     </PageContainer>
