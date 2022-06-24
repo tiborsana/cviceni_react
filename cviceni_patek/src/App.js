@@ -65,8 +65,14 @@ function App() {
       finalniCena += objednavka.gravelKs * 2500;
     }
 
-    setFinalPrice(finalniCena);
+
+
+
+    // POČET DNŮ
+    let pocetDnu = objednavka.pocetDnu;
+    finalniCena = (finalniCena*pocetDnu);
     console.log(finalniCena);
+    setFinalPrice(finalniCena);
     // let destinationPrice = objednavka.destinace;
     // setDestinationPrice(destinationPrice);
     // let pocetLetenek = objednavka.pocetLetenek;
@@ -137,11 +143,17 @@ function App() {
      <Prvek>
     <Nadpis>Počet dnů:</Nadpis>
     <br />
-    <select>
+    <select id='pocetDnu' onClick={(e) => {
+            dispatch({
+              type: "update_number",
+              value: e.target.value,
+              key: "pocetDnu",
+            });
+          }}>
       <option value={1}>1 den</option>
       <option value={2}>2 dny</option>
-      <option value={3}>týden</option>
-      <option value={4}>14 dní</option>
+      <option value={7}>týden</option>
+      <option value={14}>14 dní</option>
     </select>
      </Prvek>
 
